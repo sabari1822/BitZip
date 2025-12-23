@@ -1,0 +1,35 @@
+body {
+  background: #0f172a;
+  color: white;
+  font-family: Arial;
+}
+
+.container, .dashboard {
+  max-width: 900px;
+  margin: 30px auto;
+  background: #020617;
+  padding: 20px;
+  border-radius: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+}
+
+button {
+  padding: 8px 15px;
+  background: #38bdf8;
+  border: none;
+  cursor: pointer;
+}
+
+table {
+  width: 100%;
+}
+
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #334155;
+}

@@ -1,20 +1,43 @@
 {
   "name": "url-shortener",
   "version": "1.0.0",
-  "description": "",
+  "description": "BitZip – A full-stack URL shortener with analytics dashboard",
+  "private": true,
   "license": "ISC",
   "author": "",
   "type": "commonjs",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "dev": "concurrently \"npm start\" \"npm run dev --prefix frontend\"",
+    "dev:backend": "npm start",
+    "dev:frontend": "npm run dev --prefix frontend",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.3",
-    "express": "^5.2.1",
+    "express": "^4.22.1",
     "mongoose": "^9.0.2",
-    "nanoid": "^5.1.6",
+    "nanoid": "^3.3.11",
     "nodemon": "^3.1.11"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sabari1822/BitZip.git"
+  },
+  "keywords": [
+    "url-shortener",
+    "bitzip",
+    "nodejs",
+    "express",
+    "mongodb",
+    "react",
+    "vite"
+  ],
+  "bugs": {
+    "url": "https://github.com/sabari1822/BitZip/issues"
+  },
+  "homepage": "https://github.com/sabari1822/BitZip#readme"
 }
