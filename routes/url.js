@@ -1,9 +1,15 @@
-const express = require('express');
-const router = express.Router();
-const{generateNewShortUrl,handleGetAnalystics,getAllUrls}= require('../controllers/url');
+const router = require("express").Router();
+const auth = require("../middleware/auth");
+const {
+  createUrl,
+  getUrls,
+  getAnalytics,
+  deleteUrl,
+} = require("../controllers/url");
 
-router.post('/', generateNewShortUrl);
-router.get('/analytics/:shortId', handleGetAnalystics);
-router.get('/all', getAllUrls);
+router.post("/", auth, createUrl);
+router.get("/all", auth, getUrls);
+router.get("/analytics/:shortId", auth, getAnalytics);
+router.delete("/:id", auth, deleteUrl);
 
 module.exports = router;

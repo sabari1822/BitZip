@@ -1,60 +1,60 @@
 const { nanoid } = require("nanoid");
 const Url = require("../models/url");
 
-async function getAllUrls(req, res) {
-  try {
-    const urls = await Url.find({});
-    return res.json(urls);
-  } catch (err) {
-    console.error("Get all URLs error:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-}
+exports.createUrl = async (req, res) => {
+  const { url, customAlias } = req.body;
 
-async function handleGetAnalystics(req, res) {
-  try {
-    const shortId = req.params.shortId;
-    const result = await Url.findOne({ shortId });
+  if (!url) return res.status(400).json({ error: "URL required" });
 
-    if (!result) {
-      return res.status(404).json({ error: "Not found" });
-    }
+  const shortId = customAlias?.trim() || nanoid(8);
 
-    return res.json({
-      totalClicks: result.visitHistory.length,
-      analytics: result.visitHistory,
-    });
-  } catch (err) {
-    console.error("Analytics error:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-}
+  const exists = await Url.findOne({ shortId });
+  if (exists) return res.status(409).json({ error: "Alias already exists" });
 
-async function generateNewShortUrl(req, res) {
-  try {
-    const { url } = req.body;
+  const newUrl = await Url.create({
+    shortId,
+    redirectUrl: url,
+    userId: req.user.id,
+    visitHistory: [],
+  });
 
-    if (!url) {
-      return res.status(400).json({ error: "url is required" });
-    }
+  res.json({ id: newUrl.shortId });
+};
 
-    const shortID = nanoid(8);
+exports.getUrls = async (req, res) => {
+  const page = Number(req.query.page) || 1;
+  const limit = 5;
+  const skip = (page - 1) * limit;
 
-    await Url.create({
-      shortId: shortID,
-      redirectUrl: url,
-      visitHistory: [],
-    });
+  const urls = await Url.find({ userId: req.user.id })
+    .sort({ createdAt: -1 })
+    .skip(skip)
+    .limit(limit);
 
-    return res.json({ id: shortID });
-  } catch (err) {
-    console.error("Create short URL error:", err);
-    return res.status(500).json({ error: "Internal Server Error" });
-  }
-}
+  const total = await Url.countDocuments({ userId: req.user.id });
 
-module.exports = {
-  generateNewShortUrl,
-  handleGetAnalystics,
-  getAllUrls,
+  res.json({ urls, totalPages: Math.ceil(total / limit) });
+};
+
+exports.getAnalytics = async (req, res) => {
+  const url = await Url.findOne({
+    shortId: req.params.shortId,
+    userId: req.user.id,
+  });
+
+  if (!url) return res.status(404).json({ error: "Not found" });
+
+  res.json({
+    totalClicks: url.visitHistory.length,
+    analytics: url.visitHistory,
+  });
+};
+
+exports.deleteUrl = async (req, res) => {
+  await Url.deleteOne({
+    _id: req.params.id,
+    userId: req.user.id,
+  });
+
+  res.json({ success: true });
 };
