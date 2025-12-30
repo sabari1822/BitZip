@@ -1,9 +1,11 @@
+import { Link } from "react-router-dom";
+
 export default function HomeExtras({ isAuth }) {
   if (isAuth) return null;
 
   return (
     <>
-      
+      {/* FEATURES SECTION */}
       <section className="features-section">
         <div className="container">
           <div className="row g-4 text-center">
@@ -66,7 +68,7 @@ export default function HomeExtras({ isAuth }) {
         </div>
       </section>
 
-      
+      {/* CTA SECTION */}
       <section className="cta-section text-center">
         <div className="container">
           <h3 className="fw-bold mb-3">
@@ -76,9 +78,10 @@ export default function HomeExtras({ isAuth }) {
             Create an account to unlock analytics, custom aliases, and more.
           </p>
 
-          <a href="/signup" className="btn btn-primary btn-lg px-5">
+          {/* FIXED: React Router navigation */}
+          <Link to="/signup" className="btn btn-primary btn-lg px-5">
             Create free account
-          </a>
+          </Link>
         </div>
       </section>
     </>
